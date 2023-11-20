@@ -1,0 +1,41 @@
+Package: bmnr
+Title: Bayesian Matrix Normal Regression
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Josh",
+           family = "Cowley",
+           role = c("aut", "cre"),
+           email = "j.cowley1@ncl.ac.uk")
+Maintainer: Josh Cowley <j.cowley1@ncl.ac.uk>
+Description:
+    Fits a Matrix normal distribution where the mean is a linear predictor,
+    covariance across rows is assumed Gaussian process and covariance across
+    columns is estimated.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Biarch: true
+Depends: 
+    R (>= 3.4.0)
+Imports:
+    dplyr,
+    matrixNormal,
+    methods,
+    Rcpp (>= 0.12.0),
+    RcppParallel (>= 5.0.1),
+    rlang,
+    rstan (>= 2.18.1),
+    rstantools (>= 2.3.1.1),
+    tibble
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+SystemRequirements: GNU make
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

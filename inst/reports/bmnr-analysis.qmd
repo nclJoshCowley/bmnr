@@ -1,0 +1,124 @@
+---
+title: "Bayesian Matrix Normal Regression"
+subtitle: "Simulation Study"
+author: "Josh Cowley"
+date: today # Created 2023-08-16
+format: html
+page-layout: full
+toc: true
+self-contained: true
+params:
+  object: !expr NULL
+---
+
+```{r setup}
+#| include: false
+library(bmnr)
+library(ggplot2)
+library(patchwork)
+
+is_child <- exists("object")
+
+if (!(is_child)) {
+  object <- 
+    if (params$object$tag == "!expr") {
+      eval(parse(text = params$object$value))
+    } else {
+      params$object
+    }
+}
+
+.set_bmnr_render_options(object, is_child = is_child, fig.asp = 0.4)
+```
+
+
+## Model
+
+::: {.callout-note collapse="true"}
+#### Stan Code
+```{r input-stancode}
+#| results: asis
+cat(sprintf("`{bmnr}` v%s", packageVersion("bmnr")), "\n\n")
+cat("```{.cpp .cell-code}", rstan::get_stancode(object), "```", sep = "\n")
+```
+:::
+
+::: {.callout-note collapse="true"}
+#### Stan Controls
+```{r input-stan-n}
+#| results: asis
+local({
+  stan_n <- bmnr::get_stan_controls(object)
+  cat(sprintf("- `%s = %s`", names(stan_n), stan_n), sep = "\n\n")
+})
+```
+:::
+
+::: {.callout-note collapse="true"}
+#### Prior Information
+```{r input-prior}
+#| results: asis
+cat(sprintf("- `%s = %s`", names(object@prior), object@prior), sep = "\n\n")
+```
+:::
+
+::: {.callout-note collapse="true"}
+#### Initial Values
+```{r input-inits}
+#| results: asis
+rlang::set_names(
+  rstan::get_inits(object),
+  function(.x) sprintf("Chain %s", seq_along(.x))
+)
+```
+:::
+
+
+## Parameters
+
+::: {.panel-tabset}
+### Regression
+```{r output-regr}
+#| opts.label: regr
+lapply(
+  autoplot(object, "regr", c("density", "trace", "acf")),
+  patchwork::wrap_plots,
+  nrow = object@par_dims$regr[1],
+  ncol = object@par_dims$regr[2],
+  byrow = FALSE,
+  guides = "collect"
+)
+```
+
+### Covariance (across-columns)
+```{r output-covar_y}
+#| opts.label: covar_y
+lapply(
+  autoplot(object, "covar_y", c("density", "trace", "acf")),
+  patchwork::wrap_plots,
+  nrow = object@par_dims$covar_y[1],
+  ncol = object@par_dims$covar_y[2],
+  byrow = FALSE,
+  guides = "collect"
+)
+```
+
+### GP Hyperparameters
+```{r input-gp}
+hyperpars <-
+  grep("^gp_", object@model_pars, value = TRUE) |>
+  rlang::set_names(function(.x) sprintf("`%s`", .x))
+```
+
+```{r output-gp}
+#| opts.label: covar_s
+if (length(hyperpars) > 0) {
+  hyperpars |>
+    lapply(\(.x) autoplot(object, .x, c("density", "trace", "acf"))) |>
+    purrr::modify_depth(2, patchwork::wrap_plots, guides = "collect")
+} else {
+  knitr::asis_output("No hyperparameters found in model output.")
+}
+```
+
+:::
