@@ -19,7 +19,7 @@ bmnr_yx <- function(y, x, coords, ..., prior) {
     rstan::sampling(
       object = stanmodels$bmnr,
       data = c(mcmc_data, prior),
-      pars = c("regr", "covar_y", "gp_scale", "gp_length"),
+      pars = c("regr", "covar_y", "gp_length"),
       ...
     )
 
