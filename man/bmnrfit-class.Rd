@@ -25,9 +25,9 @@ returned by \code{\link{bmnr}}.
 \describe{
 \item{\code{data}}{data frame(s). Originally passed data.}
 
-\item{\code{formula}}{formula. Distinguishes \eqn{Y} and \eqn{X} data.}
-
-\item{\code{coord_formula}}{formula. Distinguishes coordinate data.}
+\item{\code{formula}}{list.
+* \verb{$model} describes \eqn{Y} and \eqn{X} variables.
+* \verb{$coord} describes \eqn{s} coordinate variables.}
 
 \item{\code{prior}}{list. Originally passed prior hyperparameters.}
 

@@ -1,7 +1,7 @@
 Package: bmnr
 Title: Bayesian Matrix Normal Regression
-Version: 0.0.0.9000
-Authors@R: 
+Version: 0.1.0
+Authors@R:
     person(given = "Josh",
            family = "Cowley",
            role = c("aut", "cre"),
@@ -16,7 +16,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Biarch: true
-Depends: 
+Depends:
     R (>= 3.4.0)
 Imports:
     dplyr,
@@ -28,7 +28,7 @@ Imports:
     rstan (>= 2.18.1),
     rstantools (>= 2.3.1.1),
     tibble
-LinkingTo: 
+LinkingTo:
     BH (>= 1.66.0),
     Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
@@ -36,6 +36,6 @@ LinkingTo:
     rstan (>= 2.18.1),
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
-Suggests: 
+Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

@@ -15,34 +15,22 @@ data {
   vector[n_gp_dims] coords[n_s];
 
   // Prior Hyperparameters
-  /*
   real<lower=0> regr_prec;
-  cov_matrix[n_y] covar_y_scale;
   real<lower=0> covar_y_df;
+  cov_matrix[n_y] covar_y_scale;
 
   // GP Prior Hyperparameters
   real<lower=0> gp_length_shape;
   real<lower=0> gp_length_rate;
-  */
 }
 transformed data {
-  // TODO. To be supplied by user in future
-  real regr_prec = 0.1;
-  real covar_y_df = n_y;
-  cov_matrix[n_y] covar_y_scale = diag_matrix(rep_vector(1, n_y));
-
-  // TODO. To be supplied by user in future
-  real<lower=0> gp_length_shape = 2;
-  real<lower=0> gp_length_rate = 10;
-
   // GP Parameters (Assumed known)
-  real<lower=0> gp_scale_prec = 1;
+  real<lower=0> gp_scale = 1;
   real<lower=0> gp_nugget = 1e-8;
 }
 parameters {
   matrix[n_x, n_y] regr;
   cov_matrix[n_y] covar_y;
-  real<lower=0> gp_scale;
   vector[n_gp_dims] gp_length;
 }
 model {
@@ -57,10 +45,9 @@ model {
   L_covar_s = cholesky_decompose(covar_s);
 
   // Prior
-  for (yi in 1:n_y) regr[, yi] ~ normal(0, regr_prec);
+  for (yi in 1:n_y) regr[, yi] ~ normal(0, 1 / sqrt(regr_prec));
   covar_y ~ inv_wishart(covar_y_df, covar_y_scale);
   gp_length ~ gamma(gp_length_shape, gp_length_rate);
-  gp_scale ~ normal(0, 1 / sqrt(gp_scale_prec));
 
   // Likelihood
   y ~ matrix_normal_halfcholesky(x * regr, L_covar_s, covar_y);

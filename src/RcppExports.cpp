@@ -13,10 +13,12 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 
 RcppExport SEXP _rcpp_module_boot_stan_fit4bmnr_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bmnr_mvnorm_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4interface_gp_matern32_cov_ard_mod();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_stan_fit4bmnr_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bmnr_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bmnr_mvnorm_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bmnr_mvnorm_mod, 0},
     {"_rcpp_module_boot_stan_fit4interface_gp_matern32_cov_ard_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4interface_gp_matern32_cov_ard_mod, 0},
     {NULL, NULL, 0}
 };

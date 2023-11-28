@@ -7,8 +7,9 @@
 #' @importFrom methods new
 #'
 #' @slot data data frame(s). Originally passed data.
-#' @slot formula formula. Distinguishes \eqn{Y} and \eqn{X} data.
-#' @slot coord_formula formula. Distinguishes coordinate data.
+#' @slot formula list.
+#'     * `$model` describes \eqn{Y} and \eqn{X} variables.
+#'     * `$coord` describes \eqn{s} coordinate variables.
 #' @slot prior list. Originally passed prior hyperparameters.
 #' @slot params list. Underlying parameter values, used in plotting.
 #'
@@ -28,8 +29,7 @@ bmnrfit_class <-
     contains = "stanfit",
     slots = list(
       data = "data.frame",
-      formula = "formula",
-      coord_formula = "formula",
+      formula = "list",
       prior = "list"
     )
   )
