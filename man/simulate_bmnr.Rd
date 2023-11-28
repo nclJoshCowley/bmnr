@@ -33,6 +33,9 @@ Simulates from a BMNR model.
 \item \code{example_simulate_bmnr()}: Default arguments for quick simulation.
 
 }}
+\note{
+Setting \code{gp_func = NULL} implies independence across rows.
+}
 \section{Model description}{
 
 Suppose we observe two matrices,

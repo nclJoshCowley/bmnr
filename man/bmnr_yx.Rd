@@ -2,9 +2,12 @@
 % Please edit documentation in R/bmnr-yx.R
 \name{bmnr_yx}
 \alias{bmnr_yx}
+\alias{bmnr_mvnorm_yx}
 \title{Implementation of BMNR Model}
 \usage{
 bmnr_yx(y, x, coords, ..., prior)
+
+bmnr_mvnorm_yx(y, x, coords, ..., prior)
 }
 \arguments{
 \item{y}{matrix Dependent variables.}

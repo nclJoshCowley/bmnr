@@ -15,7 +15,6 @@ data {
   vector[n_gp_dims] coords[n_s];
 
   // Prior Hyperparameters
-  /*
   real<lower=0> regr_prec;
   real<lower=0> covar_y_df;
   cov_matrix[n_y] covar_y_scale;
@@ -23,18 +22,8 @@ data {
   // GP Prior Hyperparameters
   real<lower=0> gp_length_shape;
   real<lower=0> gp_length_rate;
-  */
 }
 transformed data {
-  // TODO. To be supplied by user in future
-  real regr_prec = 0.1;
-  real covar_y_df = n_y;
-  cov_matrix[n_y] covar_y_scale = diag_matrix(rep_vector(1, n_y));
-
-  // TODO. To be supplied by user in future
-  real<lower=0> gp_length_shape = 2;
-  real<lower=0> gp_length_rate = 10;
-
   // GP Parameters (Assumed known)
   real<lower=0> gp_scale = 1;
   real<lower=0> gp_nugget = 1e-8;

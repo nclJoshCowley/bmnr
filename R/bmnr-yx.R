@@ -25,3 +25,23 @@ bmnr_yx <- function(y, x, coords, ..., prior) {
 
   return(out)
 }
+
+
+#' @rdname bmnr_yx
+#' @keywords internal
+bmnr_mvnorm_yx <- function(y, x, coords, ..., prior) {
+  mcmc_data <-
+    list(n_s = nrow(y), n_y = ncol(y), n_x = ncol(x), y = y, x = x)
+
+  message("Exectuing MCMC algorithm ...")
+
+  out <-
+    rstan::sampling(
+      object = stanmodels$bmnr_mvnorm,
+      data = c(mcmc_data, prior),
+      pars = c("regr", "covar_y"),
+      ...
+    )
+
+  return(out)
+}

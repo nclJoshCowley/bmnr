@@ -10,20 +10,40 @@ bmnr(object, ..., prior)
 
 \method{bmnr}{bmnr_sim}(object, ..., prior)
 
-\method{bmnr}{formula}(object, coord_formula, data, ..., prior)
+\method{bmnr}{formula}(object, data, ..., prior)
 }
 \arguments{
-\item{object}{Typically a formula (with \code{data}) but can be \code{\link{bmnr_sim}}.}
+\item{object}{formula. Specifies model description; see "Extended Formula".}
 
 \item{...}{Extra arguments passed to \link[rstan:stanmodel-method-sampling]{rstan::sampling}.}
 
 \item{prior}{list. Required prior information; see \code{\link[=bmnr_prior]{bmnr_prior()}}.}
-
-\item{coord_formula}{RHS only formula. Specifies coordinate data.\
-\strong{Note}. Future versions will pull this argument into \code{formula}.}
 
 \item{data}{data.frame. Training data that contains all \code{formula} terms.}
 }
 \description{
 Bayesian Matrix Normal Regression
 }
+\note{
+The formula-data interface can be ignored in favour of a \code{\link{bmnr-sim}}.
+}
+\section{Extended Formula}{
+
+For more information on extending \code{formula}, see the \code{Formula} package but
+be warned about \url{https://github.com/rstudio/rstudio/issues/12409}.
+
+Specific a standard LHS as one would with \code{\link[stats:lm]{stats::lm()}} using \code{cbind}.
+\itemize{
+\item \code{cbind(y01, y02) ~ x01 + x02}
+\item \code{cbind(y01, y02) ~ .}
+}
+
+The RHS is split into predictors and coordinate information split into two
+parts using \code{"|"}
+
+For example,
+\itemize{
+\item \code{cbind(y01, y02) ~ x01 + x02 + x03 | coord_x + coord_y}
+}
+}
+
