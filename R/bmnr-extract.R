@@ -1,114 +1,160 @@
-#' Extract Samples to Data Frame
+#' Extract Model Parameters
 #'
-#' Wrapper for [`rstan::extract()`]; converts array of samples to tidy format.
+#' Extracts or calculates key model parameters and derived quantities
 #'
-#' @param object Object that inherits from [`stanfit`][rstan::stanfit-class].
-#' @param pars character. Parameter names, with optional subsetting.
-#' @inheritParams rlang::args_dots_empty
+#' @inheritParams bmnr-package
 #'
-#' @note Applying this method to an object of class [`bmnrfit_simstudy`] adds
-#'   an extra `.truth` column as appropriate.
-#'
-#' @name extract_to_data_frame
+#' @name extract-pars
 NULL
 
 
-#' @rdname extract_to_data_frame
+#' @rdname extract-pars
 #' @export
-setGeneric("extract_to_data_frame", function(object, pars, ...) {
-  standardGeneric("extract_to_data_frame")
-})
+extract_regr <- function(object) {
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
+
+  array(
+    rstan::extract(object, "regr", permuted = FALSE),
+    dim = c(n_iters, n_chains, object@par_dims$regr)
+  )
+}
 
 
-#' @rdname extract_to_data_frame
+#' @rdname extract-pars
 #' @export
-setMethod("extract_to_data_frame", "stanfit", function(object, pars, ...) {
-  rlang::check_dots_empty()
+extract_covar_y <- function(object) {
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
 
-  mcmcarray_to_data_frame(rstan::extract(object, pars, permuted = FALSE))
-})
+  array(
+    rstan::extract(object, "covar_y", permuted = FALSE),
+    dim = c(n_iters, n_chains, object@par_dims$covar_y)
+  )
+}
 
 
-#' @rdname extract_to_data_frame
+#' @rdname extract-pars
 #' @export
-setMethod("extract_to_data_frame", "bmnrfit_simstudy", function(object, pars, ...) {
-  rlang::check_dots_empty()
+extract_gp_length <- function(object) {
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
 
-  out_draws <- methods::callNextMethod()
-  out_truth <- extract_simstudy_true_values(object, pars)
+  array(
+    rstan::extract(object, "covar_y", permuted = FALSE),
+    dim = c(n_iters, n_chains, object@par_dims$gp_length)
+  )
+}
 
-  dplyr::left_join(out_draws, out_truth, by = ".term")
-})
 
+#' @rdname extract-pars
+#' @export
+extract_linpred <- function(object, new_data) {
+  if (is.null(new_data)) new_data <- object@data
 
-#' Get True Value from a Simulation Study
-#'
-#' @param object Object that inherits from [`bmnrfit_simstudy`].
-#' @inheritParams extract_to_data_frame
-#'
-#' @keywords internal
-extract_simstudy_true_values <- function(object, pars) {
-  stopifnot(inherits(object, "bmnrfit_simstudy"))
+  n_s <- nrow(new_data)
+  n_y <- object@par_dims$covar_y[1]
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
 
-  pars_list <- validate_and_split_pars(object, pars)
+  x <- stats::model.matrix(object@formula$model, data = new_data)
 
-  out_list <-
-    Map(x = pars_list, nm = names(pars_list), function(x, nm) {
-      all_true_values <-
-        tibble::tibble(
-          .term = validate_and_split_pars(object, nm)[[nm]],
-          .truth = c(object@params[[nm]]) %||% NA_real_
-        )
+  mcmc_regr <- extract_regr(object)
 
-      return(dplyr::filter(all_true_values, .data$.term %in% x))
-    })
+  out <- array(NA_real_, dim = c(n_iters, n_chains, n_s, n_y))
 
-  problematic_out <-
-    names(Filter(Negate(function(.x) ncol(.x) == 2 && nrow(.x) > 0), out_list))
-
-  if (length(problematic_out)) {
-    stop("Invalid truth recovery for: ", toString(problematic_out))
+  for (ii in seq_len(n_iters)) {
+    for (ic in seq_len(n_chains)) {
+      out[ii, ic, , ] <- x %*% mcmc_regr[ii, ic, , ]
+    }
   }
 
-  return(dplyr::bind_rows(out_list))
+  return(out)
 }
 
 
-#' Make `pars` Argument Explicit
-#'
-#' Extends and splits desired parameters based on bare parameter names.
-#'
-#' @inheritParams extract_to_data_frame
-#'
-#' @keywords internal
-validate_and_split_pars <- function(object, pars) {
-  extended_pars <-
-    dimnames(rstan::extract(object, pars, permuted = FALSE))[["parameters"]]
+#' @rdname extract-pars
+#' @param .nugget numeric. Added to main diagonal for computation stability.
+#' @export
+extract_covar_s <- function(object, new_data, .nugget = 1e-8) {
+  if (object@model_name == "bmnr_mvnorm") {
+    stop("Parameter 'covar_s' not defined for 'bmnr_mvnorm' model")
+  }
 
-  split(extended_pars, gsub("\\[[0-9,]+\\]$", "", extended_pars))
+  if (is.null(new_data)) new_data <- object@data
+
+  coords <- stats::model.matrix(object@formula$coord, data = new_data)
+
+  n_s <- nrow(new_data)
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
+
+  message("Simulating from many GPs, this may take a while")
+  .pb <- knitrProgressBar::progress_estimated(n_iters * n_chains)
+
+  mcmc_gp_length <- extract_gp_length(object)
+
+  out <- array(NA_real_, dim = c(n_iters, n_chains, n_s, n_s))
+
+  for (ii in seq_len(n_iters)) {
+    for (ic in seq_len(n_chains)) {
+      knitrProgressBar::update_progress(.pb)
+
+      out[ii, ic, , ] <-
+        gp_matern32_cov_ard(
+          x_r = coords,
+          gp_scale = 1,
+          gp_length = mcmc_gp_length[ii, ic, ]
+        )
+
+      if (!is.null(.nugget)) {
+        out[ii, ic, , ] <- out[ii, ic, , ] + diag(.nugget, nrow = n_s)
+      }
+    }
+  }
+
+  return(out)
 }
 
 
-#' Convert Stan's MCMC output to Data Frame
-#'
-#' @param mcmcarray array. Dimensions should be iterations, chains and label.
-#'
-#' @keywords internal
-mcmcarray_to_data_frame <- function(mcmcarray) {
-  par_nms <- dimnames(mcmcarray)[[3]] %||% seq_len(dim(mcmcarray)[3])
 
-  out <-
-    tibble::as_tibble(
-      expand.grid(
-        .iter = seq_len(nrow(mcmcarray)),
-        .chain = seq_len(ncol(mcmcarray)),
-        .term = factor(par_nms, levels = par_nms),
-        KEEP.OUT.ATTRS = FALSE,
-        stringsAsFactors = FALSE
-      )
+#' @rdname extract-pars
+#' @export
+extract_pointwise_log_lik <- function(object, new_data) {
+  if (is.null(new_data)) new_data <- object@data
+
+  n_s <- nrow(new_data)
+  n_y <- object@par_dims$covar_y[1]
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
+  stochastic_covar_s <- object@model_name != "bmnr_mvnorm"
+
+  y <-
+    stats::model.response(
+      stats::model.frame(object@formula$model, data = new_data)
     )
 
-  out$.value <- c(mcmcarray)
+  mcmc_linpred <- bmnr::extract_linpred(object, new_data)
+  mcmc_covar_y <- bmnr::extract_covar_y(object)
+
+  if (stochastic_covar_s) {
+    mcmc_covar_s <- bmnr::extract_covar_s(object, new_data)
+  }
+
+  out <- array(NA_real_, dim = c(n_iters, n_chains, n_s, n_y))
+
+  for (ii in seq_len(n_iters)) {
+    for (ic in seq_len(n_chains)) {
+      out[ii, ic, , ] <-
+        matrixNormal::dmatnorm(
+          A = y,
+          M = mcmc_linpred[ii, ic, , ],
+          U = if (stochastic_covar_s) mcmc_covar_s[ii, ic, , ] else diag(nrow = n_s),
+          V = mcmc_covar_y[ii, ic, , ],
+          log = TRUE
+        )
+    }
+  }
 
   return(out)
 }

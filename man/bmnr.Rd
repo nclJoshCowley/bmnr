@@ -8,7 +8,7 @@
 \usage{
 bmnr(object, ..., prior)
 
-\method{bmnr}{bmnr_sim}(object, ..., prior)
+\method{bmnr}{bmnr_sim}(object, ..., prior, mvnorm = FALSE)
 
 \method{bmnr}{formula}(object, data, ..., prior)
 }
@@ -18,6 +18,8 @@ bmnr(object, ..., prior)
 \item{...}{Extra arguments passed to \link[rstan:stanmodel-method-sampling]{rstan::sampling}.}
 
 \item{prior}{list. Required prior information; see \code{\link[=bmnr_prior]{bmnr_prior()}}.}
+
+\item{mvnorm}{logical. When \code{TRUE}, model assumes independence among-rows}
 
 \item{data}{data.frame. Training data that contains all \code{formula} terms.}
 }

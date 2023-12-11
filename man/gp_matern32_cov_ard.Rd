@@ -4,10 +4,10 @@
 \alias{gp_matern32_cov_ard}
 \title{Matern 3/2 Kernel with Characteristic Length Scales}
 \usage{
-gp_matern32_cov_ard(coords, gp_scale, gp_length)
+gp_matern32_cov_ard(x_r, gp_scale, gp_length, x_c = NULL)
 }
 \arguments{
-\item{coords}{matrix. Each row is a vector input to the kernel.}
+\item{x_r, x_c}{matrix. Each row is a vector input to the kernel.}
 
 \item{gp_scale}{real. Multiplicative amplitude of the kernel function.}
 

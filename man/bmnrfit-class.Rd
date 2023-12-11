@@ -6,8 +6,12 @@
 \alias{bmnrfit}
 \alias{bmnrfit_simstudy}
 \alias{bmnrfit_class}
+\alias{bmnrfit_mvrnorm-class}
+\alias{bmnrfit_mvrnorm_class}
 \alias{bmnrfit_simstudy-class}
 \alias{bmnrfit_simstudy_class}
+\alias{bmnrfit_mvrnorm_simstudy-class}
+\alias{bmnrfit_mvrnorm_simstudy_class}
 \title{S4 Class Objects for \code{bmnr}}
 \description{
 S4 object, inheriting from \code{\link[rstan:stanfit-class]{stanfit}}, that is
@@ -17,7 +21,12 @@ returned by \code{\link{bmnr}}.
 \itemize{
 \item \code{bmnrfit_class}: General purpose S4 class (parent class is \code{stanfit}).
 
+\item \code{bmnrfit_mvrnorm_class}: Special case of \code{bmnrfit}, rows assumed independent.
+
 \item \code{bmnrfit_simstudy_class}: Simulation study subclass (parent class is \code{bmnrfit}).
+
+\item \code{bmnrfit_mvrnorm_simstudy_class}: Simulation study subclass
+(parent class is \code{bmnrfit_mvrnorm}).
 
 }}
 \section{Slots}{

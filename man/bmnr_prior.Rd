@@ -4,10 +4,14 @@
 \alias{bmnr_prior}
 \title{Prior Information}
 \usage{
-bmnr_prior(...)
+bmnr_prior(n_y, ..., with_gp = TRUE)
 }
 \arguments{
+\item{n_y}{integer. Number of dependent variables.}
+
 \item{...}{Overwrite default values for each prior.}
+
+\item{with_gp}{logical. Setting \code{TRUE} supplied parameters for \code{gp_length}.}
 }
 \description{
 Helper function to assist in defining prior information for BMNR models.
