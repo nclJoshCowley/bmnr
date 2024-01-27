@@ -75,34 +75,140 @@ using stan::math::pow;
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'string', line 42, column 2 to column 74)",
-                                                      " (in 'string', line 35, column 2 to column 19)",
-                                                      " (in 'string', line 36, column 2 to column 24)",
-                                                      " (in 'string', line 37, column 26 to column 29)",
-                                                      " (in 'string', line 37, column 9 to column 17)",
-                                                      " (in 'string', line 37, column 2 to column 31)",
-                                                      " (in 'string', line 38, column 2 to column 16)",
-                                                      " (in 'string', line 39, column 9 to column 17)",
-                                                      " (in 'string', line 39, column 2 to column 29)",
-                                                      " (in 'string', line 42, column 9 to column 12)",
-                                                      " (in 'string', line 42, column 14 to column 17)",
-                                                      " (in 'string', line 13, column 4 to column 22)",
-                                                      " (in 'string', line 14, column 11 to column 14)",
-                                                      " (in 'string', line 14, column 16 to column 19)",
-                                                      " (in 'string', line 14, column 4 to column 25)",
-                                                      " (in 'string', line 16, column 4 to column 40)",
-                                                      " (in 'string', line 17, column 4 to column 14)",
-                                                      " (in 'string', line 20, column 6 to column 30)",
-                                                      " (in 'string', line 23, column 8 to column 58)",
-                                                      " (in 'string', line 24, column 8 to column 82)",
-                                                      " (in 'string', line 25, column 8 to column 30)",
-                                                      " (in 'string', line 22, column 29 to line 26, column 7)",
-                                                      " (in 'string', line 22, column 6 to line 26, column 7)",
-                                                      " (in 'string', line 19, column 27 to line 27, column 5)",
-                                                      " (in 'string', line 19, column 4 to line 27, column 5)",
-                                                      " (in 'string', line 29, column 4 to column 32)",
-                                                      " (in 'string', line 31, column 4 to column 15)",
-                                                      " (in 'string', line 12, column 72 to line 32, column 1)"};
+                                                      " (in 'string', line 74, column 2 to column 35)",
+                                                      " (in 'string', line 78, column 4 to column 69)",
+                                                      " (in 'string', line 77, column 9 to line 79, column 3)",
+                                                      " (in 'string', line 76, column 4 to column 56)",
+                                                      " (in 'string', line 75, column 16 to line 77, column 3)",
+                                                      " (in 'string', line 75, column 2 to line 79, column 3)",
+                                                      " (in 'string', line 64, column 2 to column 24)",
+                                                      " (in 'string', line 65, column 2 to column 19)",
+                                                      " (in 'string', line 66, column 2 to column 19)",
+                                                      " (in 'string', line 67, column 23 to column 26)",
+                                                      " (in 'string', line 67, column 9 to column 17)",
+                                                      " (in 'string', line 67, column 2 to column 28)",
+                                                      " (in 'string', line 68, column 23 to column 26)",
+                                                      " (in 'string', line 68, column 9 to column 17)",
+                                                      " (in 'string', line 68, column 2 to column 28)",
+                                                      " (in 'string', line 69, column 2 to column 16)",
+                                                      " (in 'string', line 70, column 9 to column 17)",
+                                                      " (in 'string', line 70, column 2 to column 29)",
+                                                      " (in 'string', line 74, column 9 to column 12)",
+                                                      " (in 'string', line 74, column 14 to column 29)",
+                                                      " (in 'string', line 13, column 4 to column 24)",
+                                                      " (in 'string', line 14, column 4 to column 24)",
+                                                      " (in 'string', line 15, column 11 to column 14)",
+                                                      " (in 'string', line 15, column 16 to column 19)",
+                                                      " (in 'string', line 15, column 4 to column 25)",
+                                                      " (in 'string', line 17, column 4 to column 40)",
+                                                      " (in 'string', line 18, column 4 to column 14)",
+                                                      " (in 'string', line 22, column 8 to column 64)",
+                                                      " (in 'string', line 23, column 8 to line 24, column 72)",
+                                                      " (in 'string', line 21, column 24 to line 25, column 7)",
+                                                      " (in 'string', line 21, column 6 to line 25, column 7)",
+                                                      " (in 'string', line 20, column 22 to line 26, column 5)",
+                                                      " (in 'string', line 20, column 4 to line 26, column 5)",
+                                                      " (in 'string', line 28, column 4 to column 15)",
+                                                      " (in 'string', line 12, column 96 to line 29, column 1)",
+                                                      " (in 'string', line 42, column 4 to column 22)",
+                                                      " (in 'string', line 43, column 11 to column 14)",
+                                                      " (in 'string', line 43, column 16 to column 19)",
+                                                      " (in 'string', line 43, column 4 to column 25)",
+                                                      " (in 'string', line 45, column 4 to column 40)",
+                                                      " (in 'string', line 46, column 4 to column 14)",
+                                                      " (in 'string', line 49, column 6 to column 30)",
+                                                      " (in 'string', line 52, column 8 to column 58)",
+                                                      " (in 'string', line 53, column 8 to column 82)",
+                                                      " (in 'string', line 54, column 8 to column 30)",
+                                                      " (in 'string', line 51, column 29 to line 55, column 7)",
+                                                      " (in 'string', line 51, column 6 to line 55, column 7)",
+                                                      " (in 'string', line 48, column 27 to line 56, column 5)",
+                                                      " (in 'string', line 48, column 4 to line 56, column 5)",
+                                                      " (in 'string', line 58, column 4 to column 32)",
+                                                      " (in 'string', line 60, column 4 to column 15)",
+                                                      " (in 'string', line 41, column 72 to line 61, column 1)"};
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__, T2__,
+stan::value_type_t<T3__>>, -1, -1>
+gp_matern32_cov_ard_general(const std::vector<Eigen::Matrix<T0__, -1, 1>>& x_r,
+                            const std::vector<Eigen::Matrix<T1__, -1, 1>>& x_c,
+                            const T2__& gp_scale,
+                            const T3__& gp_length_arg__,
+                            std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__,
+          T1__,
+          T2__,
+          stan::value_type_t<T3__>>;
+  const auto& gp_length = to_ref(gp_length_arg__);
+  const static bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  
+  try {
+    int n_r;
+    n_r = std::numeric_limits<int>::min();
+    
+    current_statement__ = 21;
+    n_r = stan::math::size(x_r);
+    int n_c;
+    n_c = std::numeric_limits<int>::min();
+    
+    current_statement__ = 22;
+    n_c = stan::math::size(x_c);
+    current_statement__ = 23;
+    validate_non_negative_index("out", "n_r", n_r);
+    current_statement__ = 24;
+    validate_non_negative_index("out", "n_c", n_c);
+    Eigen::Matrix<local_scalar_t__, -1, -1> out;
+    out = Eigen::Matrix<local_scalar_t__, -1, -1>(n_r, n_c);
+    stan::math::fill(out, DUMMY_VAR__);
+    
+    local_scalar_t__ gp_scale_sq;
+    gp_scale_sq = DUMMY_VAR__;
+    
+    current_statement__ = 26;
+    gp_scale_sq = pow(gp_scale, 2);
+    local_scalar_t__ dist;
+    dist = DUMMY_VAR__;
+    
+    current_statement__ = 33;
+    for (int ir = 1; ir <= n_r; ++ir) {
+      current_statement__ = 31;
+      for (int ic = 1; ic <= n_c; ++ic) {
+        current_statement__ = 28;
+        dist = stan::math::sqrt(
+                 dot_self(
+                   elt_divide(subtract(x_r[(ir - 1)], x_c[(ic - 1)]),
+                     gp_length)));
+        current_statement__ = 29;
+        assign(out,
+          cons_list(index_uni(ir),
+            cons_list(index_uni(ic), nil_index_list())),
+          ((gp_scale_sq * (1 + (stan::math::sqrt(3) * dist))) *
+            stan::math::exp(((-1 * stan::math::sqrt(3)) * dist))),
+          "assigning variable out");}}
+    current_statement__ = 34;
+    return out;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+struct gp_matern32_cov_ard_general_functor__ {
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__, T2__,
+stan::value_type_t<T3__>>, -1, -1>
+operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& x_r,
+           const std::vector<Eigen::Matrix<T1__, -1, 1>>& x_c,
+           const T2__& gp_scale, const T3__& gp_length,
+           std::ostream* pstream__)  const 
+{
+return gp_matern32_cov_ard_general(x_r, x_c, gp_scale, gp_length, pstream__);
+}
+};
 template <typename T0__, typename T1__, typename T2__>
 Eigen::Matrix<stan::promote_args_t<T0__, T1__,
 stan::value_type_t<T2__>>, -1, -1>
@@ -122,11 +228,11 @@ gp_matern32_cov_ard(const std::vector<Eigen::Matrix<T0__, -1, 1>>& x,
     int n_r;
     n_r = std::numeric_limits<int>::min();
     
-    current_statement__ = 12;
+    current_statement__ = 36;
     n_r = stan::math::size(x);
-    current_statement__ = 13;
+    current_statement__ = 37;
     validate_non_negative_index("out", "n_r", n_r);
-    current_statement__ = 14;
+    current_statement__ = 38;
     validate_non_negative_index("out", "n_r", n_r);
     Eigen::Matrix<local_scalar_t__, -1, -1> out;
     out = Eigen::Matrix<local_scalar_t__, -1, -1>(n_r, n_r);
@@ -135,41 +241,41 @@ gp_matern32_cov_ard(const std::vector<Eigen::Matrix<T0__, -1, 1>>& x,
     local_scalar_t__ gp_scale_sq;
     gp_scale_sq = DUMMY_VAR__;
     
-    current_statement__ = 16;
+    current_statement__ = 40;
     gp_scale_sq = pow(gp_scale, 2);
     local_scalar_t__ dist;
     dist = DUMMY_VAR__;
     
-    current_statement__ = 25;
+    current_statement__ = 49;
     for (int i = 1; i <= (n_r - 1); ++i) {
-      current_statement__ = 18;
+      current_statement__ = 42;
       assign(out,
         cons_list(index_uni(i), cons_list(index_uni(i), nil_index_list())),
         gp_scale_sq, "assigning variable out");
-      current_statement__ = 23;
+      current_statement__ = 47;
       for (int j = (i + 1); j <= n_r; ++j) {
-        current_statement__ = 19;
+        current_statement__ = 43;
         dist = stan::math::sqrt(
                  dot_self(
                    elt_divide(subtract(x[(i - 1)], x[(j - 1)]), gp_length)));
-        current_statement__ = 20;
+        current_statement__ = 44;
         assign(out,
           cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())),
           ((gp_scale_sq * (1 + (stan::math::sqrt(3) * dist))) *
             stan::math::exp(((-1 * stan::math::sqrt(3)) * dist))),
           "assigning variable out");
-        current_statement__ = 21;
+        current_statement__ = 45;
         assign(out,
           cons_list(index_uni(j), cons_list(index_uni(i), nil_index_list())),
           rvalue(out,
             cons_list(index_uni(i),
               cons_list(index_uni(j), nil_index_list())), "out"),
           "assigning variable out");}}
-    current_statement__ = 26;
+    current_statement__ = 50;
     assign(out,
       cons_list(index_uni(n_r), cons_list(index_uni(n_r), nil_index_list())),
       gp_scale_sq, "assigning variable out");
-    current_statement__ = 27;
+    current_statement__ = 51;
     return out;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -192,11 +298,14 @@ return gp_matern32_cov_ard(x, gp_scale, gp_length, pstream__);
 #include <stan_meta_header.hpp>
 class model_interface_gp_matern32_cov_ard final : public model_base_crtp<model_interface_gp_matern32_cov_ard> {
 private:
-  int n_s;
   int n_inputs;
-  std::vector<Eigen::Matrix<double, -1, 1>> coords;
+  int n_r;
+  int n_c;
+  std::vector<Eigen::Matrix<double, -1, 1>> x_r;
+  std::vector<Eigen::Matrix<double, -1, 1>> x_c;
   double gp_scale;
   Eigen::Matrix<double, -1, 1> gp_length;
+  int out_2dim__;
  
 public:
   ~model_interface_gp_matern32_cov_ard() { }
@@ -224,65 +333,104 @@ public:
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 2;
-      context__.validate_dims("data initialization","n_s","int",
-          context__.to_vec());
-      n_s = std::numeric_limits<int>::min();
-      
-      current_statement__ = 2;
-      n_s = context__.vals_i("n_s")[(1 - 1)];
-      current_statement__ = 2;
-      current_statement__ = 2;
-      check_greater_or_equal(function__, "n_s", n_s, 1);
-      current_statement__ = 3;
+      current_statement__ = 7;
       context__.validate_dims("data initialization","n_inputs","int",
           context__.to_vec());
       n_inputs = std::numeric_limits<int>::min();
       
-      current_statement__ = 3;
+      current_statement__ = 7;
       n_inputs = context__.vals_i("n_inputs")[(1 - 1)];
-      current_statement__ = 3;
-      current_statement__ = 3;
+      current_statement__ = 7;
+      current_statement__ = 7;
       check_greater_or_equal(function__, "n_inputs", n_inputs, 1);
-      current_statement__ = 4;
-      validate_non_negative_index("coords", "n_s", n_s);
-      current_statement__ = 5;
-      validate_non_negative_index("coords", "n_inputs", n_inputs);
-      current_statement__ = 6;
-      context__.validate_dims("data initialization","coords","double",
-          context__.to_vec(n_s, n_inputs));
-      coords = std::vector<Eigen::Matrix<double, -1, 1>>(n_s, Eigen::Matrix<double, -1, 1>(n_inputs));
-      stan::math::fill(coords, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 8;
+      context__.validate_dims("data initialization","n_r","int",
+          context__.to_vec());
+      n_r = std::numeric_limits<int>::min();
+      
+      current_statement__ = 8;
+      n_r = context__.vals_i("n_r")[(1 - 1)];
+      current_statement__ = 8;
+      current_statement__ = 8;
+      check_greater_or_equal(function__, "n_r", n_r, 1);
+      current_statement__ = 9;
+      context__.validate_dims("data initialization","n_c","int",
+          context__.to_vec());
+      n_c = std::numeric_limits<int>::min();
+      
+      current_statement__ = 9;
+      n_c = context__.vals_i("n_c")[(1 - 1)];
+      current_statement__ = 9;
+      current_statement__ = 9;
+      check_greater_or_equal(function__, "n_c", n_c, 0);
+      current_statement__ = 10;
+      validate_non_negative_index("x_r", "n_r", n_r);
+      current_statement__ = 11;
+      validate_non_negative_index("x_r", "n_inputs", n_inputs);
+      current_statement__ = 12;
+      context__.validate_dims("data initialization","x_r","double",
+          context__.to_vec(n_r, n_inputs));
+      x_r = std::vector<Eigen::Matrix<double, -1, 1>>(n_r, Eigen::Matrix<double, -1, 1>(n_inputs));
+      stan::math::fill(x_r, std::numeric_limits<double>::quiet_NaN());
       
       {
-        std::vector<local_scalar_t__> coords_flat__;
-        current_statement__ = 6;
-        assign(coords_flat__, nil_index_list(), context__.vals_r("coords"),
-          "assigning variable coords_flat__");
-        current_statement__ = 6;
+        std::vector<local_scalar_t__> x_r_flat__;
+        current_statement__ = 12;
+        assign(x_r_flat__, nil_index_list(), context__.vals_r("x_r"),
+          "assigning variable x_r_flat__");
+        current_statement__ = 12;
         pos__ = 1;
-        current_statement__ = 6;
+        current_statement__ = 12;
         for (int sym1__ = 1; sym1__ <= n_inputs; ++sym1__) {
-          current_statement__ = 6;
-          for (int sym2__ = 1; sym2__ <= n_s; ++sym2__) {
-            current_statement__ = 6;
-            assign(coords,
+          current_statement__ = 12;
+          for (int sym2__ = 1; sym2__ <= n_r; ++sym2__) {
+            current_statement__ = 12;
+            assign(x_r,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
-              coords_flat__[(pos__ - 1)], "assigning variable coords");
-            current_statement__ = 6;
+              x_r_flat__[(pos__ - 1)], "assigning variable x_r");
+            current_statement__ = 12;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 7;
+      current_statement__ = 13;
+      validate_non_negative_index("x_c", "n_c", n_c);
+      current_statement__ = 14;
+      validate_non_negative_index("x_c", "n_inputs", n_inputs);
+      current_statement__ = 15;
+      context__.validate_dims("data initialization","x_c","double",
+          context__.to_vec(n_c, n_inputs));
+      x_c = std::vector<Eigen::Matrix<double, -1, 1>>(n_c, Eigen::Matrix<double, -1, 1>(n_inputs));
+      stan::math::fill(x_c, std::numeric_limits<double>::quiet_NaN());
+      
+      {
+        std::vector<local_scalar_t__> x_c_flat__;
+        current_statement__ = 15;
+        assign(x_c_flat__, nil_index_list(), context__.vals_r("x_c"),
+          "assigning variable x_c_flat__");
+        current_statement__ = 15;
+        pos__ = 1;
+        current_statement__ = 15;
+        for (int sym1__ = 1; sym1__ <= n_inputs; ++sym1__) {
+          current_statement__ = 15;
+          for (int sym2__ = 1; sym2__ <= n_c; ++sym2__) {
+            current_statement__ = 15;
+            assign(x_c,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())),
+              x_c_flat__[(pos__ - 1)], "assigning variable x_c");
+            current_statement__ = 15;
+            pos__ = (pos__ + 1);}}
+      }
+      current_statement__ = 16;
       context__.validate_dims("data initialization","gp_scale","double",
           context__.to_vec());
       gp_scale = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 7;
+      current_statement__ = 16;
       gp_scale = context__.vals_r("gp_scale")[(1 - 1)];
-      current_statement__ = 8;
+      current_statement__ = 17;
       validate_non_negative_index("gp_length", "n_inputs", n_inputs);
-      current_statement__ = 9;
+      current_statement__ = 18;
       context__.validate_dims("data initialization","gp_length","double",
           context__.to_vec(n_inputs));
       gp_length = Eigen::Matrix<double, -1, 1>(n_inputs);
@@ -290,24 +438,29 @@ public:
       
       {
         std::vector<local_scalar_t__> gp_length_flat__;
-        current_statement__ = 9;
+        current_statement__ = 18;
         assign(gp_length_flat__, nil_index_list(),
           context__.vals_r("gp_length"),
           "assigning variable gp_length_flat__");
-        current_statement__ = 9;
+        current_statement__ = 18;
         pos__ = 1;
-        current_statement__ = 9;
+        current_statement__ = 18;
         for (int sym1__ = 1; sym1__ <= n_inputs; ++sym1__) {
-          current_statement__ = 9;
+          current_statement__ = 18;
           assign(gp_length, cons_list(index_uni(sym1__), nil_index_list()),
             gp_length_flat__[(pos__ - 1)], "assigning variable gp_length");
-          current_statement__ = 9;
+          current_statement__ = 18;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 10;
-      validate_non_negative_index("out", "n_s", n_s);
-      current_statement__ = 11;
-      validate_non_negative_index("out", "n_s", n_s);
+      current_statement__ = 19;
+      validate_non_negative_index("out", "n_r", n_r);
+      current_statement__ = 20;
+      out_2dim__ = std::numeric_limits<int>::min();
+      
+      current_statement__ = 20;
+      out_2dim__ = (n_c ? n_c : n_r);
+      current_statement__ = 20;
+      validate_non_negative_index("out", "n_c ? n_c : n_r", out_2dim__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -375,15 +528,23 @@ public:
         return ;
       } 
       Eigen::Matrix<double, -1, -1> out;
-      out = Eigen::Matrix<double, -1, -1>(n_s, n_s);
+      out = Eigen::Matrix<double, -1, -1>(n_r, out_2dim__);
       stan::math::fill(out, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 1;
-      assign(out, nil_index_list(),
-        gp_matern32_cov_ard(coords, gp_scale, gp_length, pstream__),
-        "assigning variable out");
-      for (int sym1__ = 1; sym1__ <= n_s; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n_s; ++sym2__) {
+      current_statement__ = 6;
+      if (logical_eq(n_c, 0)) {
+        current_statement__ = 4;
+        assign(out, nil_index_list(),
+          gp_matern32_cov_ard(x_r, gp_scale, gp_length, pstream__),
+          "assigning variable out");
+      } else {
+        current_statement__ = 2;
+        assign(out, nil_index_list(),
+          gp_matern32_cov_ard_general(x_r, x_c, gp_scale,
+            gp_length, pstream__), "assigning variable out");
+      }
+      for (int sym1__ = 1; sym1__ <= out_2dim__; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= n_r; ++sym2__) {
           vars__.emplace_back(
             rvalue(out,
               cons_list(index_uni(sym2__),
@@ -423,8 +584,8 @@ public:
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_s),
-                                             static_cast<size_t>(n_s)});
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_r),
+                                             static_cast<size_t>(out_2dim__)});
     
     } // get_dims() 
     
@@ -440,9 +601,9 @@ public:
     }
     
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= n_s; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= out_2dim__; ++sym1__) {
         {
-          for (int sym2__ = 1; sym2__ <= n_s; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= n_r; ++sym2__) {
             {
               param_names__.emplace_back(std::string() + "out" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
@@ -463,9 +624,9 @@ public:
     }
     
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= n_s; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= out_2dim__; ++sym1__) {
         {
-          for (int sym2__ = 1; sym2__ <= n_s; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= n_r; ++sym2__) {
             {
               param_names__.emplace_back(std::string() + "out" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
@@ -476,13 +637,13 @@ public:
     
   inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"out\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_s << ",\"cols\":" << n_s << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"out\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_r << ",\"cols\":" << out_2dim__ << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"out\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_s << ",\"cols\":" << n_s << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"out\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_r << ",\"cols\":" << out_2dim__ << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     

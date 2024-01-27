@@ -35,6 +35,18 @@ bmnrfit_class <-
   )
 
 
+#' Model Fit S4 Object
+#'
+#' @describeIn bmnrfit Special case of `bmnrfit`, rows assumed independent.
+#'
+#' @export
+bmnrfit_mvrnorm_class <-
+  setClass(
+    Class = "bmnrfit_mvrnorm",
+    contains = "bmnrfit"
+  )
+
+
 #' Simulation Study S4 Object
 #'
 #' @describeIn bmnrfit Simulation study subclass (parent class is `bmnrfit`).
@@ -45,5 +57,19 @@ bmnrfit_simstudy_class <-
   setClass(
     Class = "bmnrfit_simstudy",
     contains = "bmnrfit",
+    slots = list(params = "list")
+  )
+
+
+#' Simulation Study S4 Object
+#'
+#' @describeIn bmnrfit Simulation study subclass
+#'   (parent class is `bmnrfit_mvrnorm`).
+#'
+#' @export
+bmnrfit_mvrnorm_simstudy_class <-
+  setClass(
+    Class = "bmnrfit_mvrnorm_simstudy",
+    contains = "bmnrfit_mvrnorm",
     slots = list(params = "list")
   )

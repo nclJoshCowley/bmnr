@@ -5,6 +5,8 @@
 #'   covariance across columns is estimated.
 #'
 #' @param object Object that inherits from [`bmnrfit`].
+#' @param new_data data frame. Data used to create a design matrices.
+#'   Setting `new_data = NULL` utilises the pre-trained data (special case).
 #'
 #' @docType package
 #' @name bmnr-package

@@ -1,7 +1,6 @@
 #' Matern 3/2 Kernel with Characteristic Length Scales
 #'
-#'
-#' @param coords matrix. Each row is a vector input to the kernel.
+#' @param x_r,x_c matrix. Each row is a vector input to the kernel.
 #' @param gp_scale real. Multiplicative amplitude of the kernel function.
 #' @param gp_length vector. Multiple length scales, one for each dimension.
 #'
@@ -10,10 +9,13 @@
 #' @returns Covariance matrix with 'nrow(x)' rows and columns
 #'
 #' @export
-gp_matern32_cov_ard <- function(coords, gp_scale, gp_length) {
+gp_matern32_cov_ard <- function(x_r, gp_scale, gp_length, x_c = NULL) {
+  if (is.null(x_c)) x_c <- matrix(nrow = 0, ncol = ncol(x_r))
+
   stan_data <- list(
-    coords = coords, gp_scale = gp_scale, gp_length = gp_length,
-    n_s = nrow(coords), n_inputs = ncol(coords)
+    n_inputs = ncol(x_r), n_r = nrow(x_r), n_c = nrow(x_c),
+    x_r = x_r, x_c = x_c,
+    gp_scale = gp_scale, gp_length = gp_length
   )
 
   if (is.null(stanmodels$interface_gp_matern32_cov_ard)) {

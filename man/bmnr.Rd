@@ -8,7 +8,7 @@
 \usage{
 bmnr(object, ..., prior)
 
-\method{bmnr}{bmnr_sim}(object, ..., prior)
+\method{bmnr}{bmnr_sim}(object, ..., prior, mvnorm = FALSE)
 
 \method{bmnr}{formula}(object, data, ..., prior)
 }
@@ -19,6 +19,8 @@ bmnr(object, ..., prior)
 
 \item{prior}{list. Required prior information; see \code{\link[=bmnr_prior]{bmnr_prior()}}.}
 
+\item{mvnorm}{logical. When \code{TRUE}, model assumes independence among-rows}
+
 \item{data}{data.frame. Training data that contains all \code{formula} terms.}
 }
 \description{
@@ -26,8 +28,28 @@ Bayesian Matrix Normal Regression
 }
 \note{
 The formula-data interface can be ignored in favour of a \code{\link{bmnr-sim}}.
+
+The formula-data interface can be ignored in favour of a \code{\link{bmnr-sim}}.
 }
 \section{Extended Formula}{
+
+For more information on extending \code{formula}, see the \code{Formula} package but
+be warned about \url{https://github.com/rstudio/rstudio/issues/12409}.
+
+Specific a standard LHS as one would with \code{\link[stats:lm]{stats::lm()}} using \code{cbind}.
+\itemize{
+\item \code{cbind(y01, y02) ~ x01 + x02}
+\item \code{cbind(y01, y02) ~ .}
+}
+
+The RHS is split into predictors and coordinate information split into two
+parts using \code{"|"}
+
+For example,
+\itemize{
+\item \code{cbind(y01, y02) ~ x01 + x02 + x03 | coord_x + coord_y}
+}
+
 
 For more information on extending \code{formula}, see the \code{Formula} package but
 be warned about \url{https://github.com/rstudio/rstudio/issues/12409}.

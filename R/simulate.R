@@ -72,7 +72,7 @@ example_simulate_bmnr <- function(...) {
 
     covar_y = 0.8 + diag(0.2, nrow = n_y),
 
-    gp_func = function(coords, ...) gp_matern32_cov_ard(coords, ...),
+    gp_func = function(.x, ...) gp_matern32_cov_ard(.x, ...),
     gp_scale = 1,
     gp_length = c(0.1, 0.2, 0.4)
   ))

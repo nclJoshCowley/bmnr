@@ -6,6 +6,9 @@
 \title{Bayesian Matrix Normal Regression Package}
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmnrfit}}.}
+
+\item{new_data}{data frame. Data used to create a design matrices.
+Setting \code{new_data = NULL} utilises the pre-trained data (special case).}
 }
 \description{
 Fits a Matrix normal distribution where the mean is a linear predictor,
