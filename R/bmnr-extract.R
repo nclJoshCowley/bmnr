@@ -57,7 +57,11 @@ extract_linpred <- function(object, new_data) {
   n_iters <- object@sim$iter - object@sim$warmup
   n_chains <- object@sim$chains
 
-  x <- stats::model.matrix(object@formula$model, data = new_data)
+  x <-
+    stats::model.matrix(
+      stats::delete.response(stats::terms(object@formula$model)),
+      data = new_data
+    )
 
   mcmc_regr <- extract_regr(object)
 
@@ -66,6 +70,26 @@ extract_linpred <- function(object, new_data) {
   for (ii in seq_len(n_iters)) {
     for (ic in seq_len(n_chains)) {
       out[ii, ic, , ] <- x %*% mcmc_regr[ii, ic, , ]
+    }
+  }
+
+  return(out)
+}
+
+
+#' @describeIn extract-pars
+#'   Alternative output when [`cov2cor`] is applied to each value of `covar_y`.
+#' @export
+extract_corr_y <- function(object) {
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
+
+  covar_y <- bmnr::extract_covar_y(object)
+  out <- array(NA, dim = dim(covar_y))
+
+  for (ii in seq_len(n_iters)) {
+    for (ic in seq_len(n_chains)) {
+      out[ii, ic, , ] <- stats::cov2cor(covar_y[ii, ic, , ])
     }
   }
 
@@ -83,7 +107,11 @@ extract_covar_s <- function(object, new_data, .nugget = 1e-8) {
 
   if (is.null(new_data)) new_data <- object@data
 
-  coords <- stats::model.matrix(object@formula$coord, data = new_data)
+  coords <-
+    stats::model.matrix(
+      stats::delete.response(stats::terms(object@formula$coord)),
+      data = new_data
+    )
 
   n_s <- nrow(new_data)
   n_iters <- object@sim$iter - object@sim$warmup
@@ -117,17 +145,22 @@ extract_covar_s <- function(object, new_data, .nugget = 1e-8) {
 }
 
 
-
 #' @rdname extract-pars
 #' @export
 extract_pointwise_log_lik <- function(object, new_data) {
+  UseMethod("extract_pointwise_log_lik")
+}
+
+
+#' @rdname extract-pars
+#' @export
+extract_pointwise_log_lik.bmnrfit_mvrnorm <- function(object, new_data) {
   if (is.null(new_data)) new_data <- object@data
 
   n_s <- nrow(new_data)
   n_y <- object@par_dims$covar_y[1]
   n_iters <- object@sim$iter - object@sim$warmup
   n_chains <- object@sim$chains
-  stochastic_covar_s <- object@model_name != "bmnr_mvnorm"
 
   y <-
     stats::model.response(
@@ -137,19 +170,64 @@ extract_pointwise_log_lik <- function(object, new_data) {
   mcmc_linpred <- bmnr::extract_linpred(object, new_data)
   mcmc_covar_y <- bmnr::extract_covar_y(object)
 
-  if (stochastic_covar_s) {
-    mcmc_covar_s <- bmnr::extract_covar_s(object, new_data)
-  }
+  out <- array(NA_real_, dim = c(n_iters, n_chains, n_s))
 
-  out <- array(NA_real_, dim = c(n_iters, n_chains, n_s, n_y))
+  message("Evaluating multivariate normal densities, this may take a while")
+  .pb <- knitrProgressBar::progress_estimated(n_iters * n_chains)
 
   for (ii in seq_len(n_iters)) {
     for (ic in seq_len(n_chains)) {
-      out[ii, ic, , ] <-
+      knitrProgressBar::update_progress(.pb)
+
+      for (i in seq_len(n_s)) {
+        out[ii, ic, i] <-
+          mvtnorm::dmvnorm(
+            x = y[i, ],
+            mean = mcmc_linpred[ii, ic, i, ],
+            sigma = mcmc_covar_y[ii, ic, , ],
+            log = TRUE
+          )
+      }
+    }
+  }
+
+  return(out)
+}
+
+
+#' @rdname extract-pars
+#' @export
+extract_pointwise_log_lik.bmnrfit <- function(object, new_data) {
+  if (is.null(new_data)) new_data <- object@data
+
+  n_s <- nrow(new_data)
+  n_y <- object@par_dims$covar_y[1]
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
+
+  y <-
+    stats::model.response(
+      stats::model.frame(object@formula$model, data = new_data)
+    )
+
+  mcmc_linpred <- bmnr::extract_linpred(object, new_data)
+  mcmc_covar_y <- bmnr::extract_covar_y(object)
+  mcmc_covar_s <- bmnr::extract_covar_s(object, new_data)
+
+  out <- array(NA_real_, dim = c(n_iters, n_chains, 1))
+
+  message("Evaluating matrix-variate normal densities, this may take a while")
+  .pb <- knitrProgressBar::progress_estimated(n_iters * n_chains)
+
+  for (ii in seq_len(n_iters)) {
+    for (ic in seq_len(n_chains)) {
+      knitrProgressBar::update_progress(.pb)
+
+      out[ii, ic, ] <-
         matrixNormal::dmatnorm(
           A = y,
           M = mcmc_linpred[ii, ic, , ],
-          U = if (stochastic_covar_s) mcmc_covar_s[ii, ic, , ] else diag(nrow = n_s),
+          U = mcmc_covar_s[ii, ic, , ],
           V = mcmc_covar_y[ii, ic, , ],
           log = TRUE
         )

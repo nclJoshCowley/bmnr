@@ -6,8 +6,11 @@
 \alias{extract_covar_y}
 \alias{extract_gp_length}
 \alias{extract_linpred}
+\alias{extract_corr_y}
 \alias{extract_covar_s}
 \alias{extract_pointwise_log_lik}
+\alias{extract_pointwise_log_lik.bmnrfit_mvrnorm}
+\alias{extract_pointwise_log_lik.bmnrfit}
 \title{Extract Model Parameters}
 \usage{
 extract_regr(object)
@@ -18,9 +21,15 @@ extract_gp_length(object)
 
 extract_linpred(object, new_data)
 
+extract_corr_y(object)
+
 extract_covar_s(object, new_data, .nugget = 1e-08)
 
 extract_pointwise_log_lik(object, new_data)
+
+\method{extract_pointwise_log_lik}{bmnrfit_mvrnorm}(object, new_data)
+
+\method{extract_pointwise_log_lik}{bmnrfit}(object, new_data)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmnrfit}}.}
@@ -33,3 +42,8 @@ Setting \code{new_data = NULL} utilises the pre-trained data (special case).}
 \description{
 Extracts or calculates key model parameters and derived quantities
 }
+\section{Functions}{
+\itemize{
+\item \code{extract_corr_y()}: Alternative output when \code{\link{cov2cor}} is applied to each value of \code{covar_y}.
+
+}}

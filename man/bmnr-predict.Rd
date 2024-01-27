@@ -3,18 +3,18 @@
 \name{bmnr-predict}
 \alias{bmnr-predict}
 \alias{predict.bmnrfit}
-\alias{extract_posterior_predictive_pars}
-\alias{extract_posterior_predictive_pars.bmnrfit_mvrnorm}
-\alias{extract_posterior_predictive_pars.bmnrfit}
+\alias{predict.bmnrfit_mvrnorm}
+\alias{extract_posterior_predictive_pars_bmnrfit}
+\alias{convert_raw_predictions_to_output}
 \title{Prediction of \code{bmnr} Models}
 \usage{
-\method{predict}{bmnrfit}(object, new_data, ..., checkSymmetry = FALSE, type = NULL)
+\method{predict}{bmnrfit}(object, new_data, ..., type = NULL)
 
-extract_posterior_predictive_pars(object, new_data)
+\method{predict}{bmnrfit_mvrnorm}(object, new_data, ..., type = NULL)
 
-\method{extract_posterior_predictive_pars}{bmnrfit_mvrnorm}(object, new_data)
+extract_posterior_predictive_pars_bmnrfit(object, new_data)
 
-\method{extract_posterior_predictive_pars}{bmnrfit}(object, new_data)
+convert_raw_predictions_to_output(x, type, .names = NULL)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmnrfit}}.}
@@ -22,14 +22,13 @@ extract_posterior_predictive_pars(object, new_data)
 \item{new_data}{data frame. Data used to create a design matrices.
 Setting \code{new_data = NULL} utilises the pre-trained data (special case).}
 
-\item{...}{These dots are for future extensions and must be empty.}
-
-\item{checkSymmetry}{logical; if \code{FALSE}, skip checking whether the
-   covariance matrix is symmetric or not. This will speed up the
-   computation but may cause unexpected outputs when ill-behaved
-   \code{sigma} is provided. The default value is \code{TRUE}.}
+\item{...}{Extra arguments passed to \code{\link[mvtnorm:Mvnorm]{mvtnorm::rmvnorm()}}.}
 
 \item{type}{choice. Return type, see \strong{Value} section for more information}
+
+\item{x}{array. Raw MCMC output as described in \strong{Value} section.}
+
+\item{.names}{character. Names each dependent variable to be predicted.}
 }
 \value{
 The helper \code{extract_posterior_predictive_pars()} returns a list of the
@@ -57,3 +56,4 @@ Prediction of \code{bmnr} Models
 TODO. Convert from handwritten notes to Markdown
 }
 
+\keyword{internal}

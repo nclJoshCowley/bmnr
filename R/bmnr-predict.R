@@ -1,9 +1,8 @@
 #' Prediction of `bmnr` Models
 #'
 #' @inheritParams bmnr-package
-#' @inheritParams rlang::args_dots_empty
+#' @param ... Extra arguments passed to [`mvtnorm::rmvnorm()`].
 #' @param type choice. Return type, see **Value** section for more information
-#' @inheritParams mvtnorm::rmvnorm
 #'
 #' @section Posterior Predictive Distribution:
 #' TODO. Convert from handwritten notes to Markdown
@@ -33,7 +32,7 @@ NULL
 
 #' @rdname bmnr-predict
 #' @export
-predict.bmnrfit <- function(object, new_data, ..., checkSymmetry = FALSE, type = NULL) {
+predict.bmnrfit <- function(object, new_data, ..., type = NULL) {
   type <- match.arg(type, choices = c("summary", "numeric", "raw"))
   if (is.null(new_data)) new_data <- object@data
 
@@ -41,109 +40,29 @@ predict.bmnrfit <- function(object, new_data, ..., checkSymmetry = FALSE, type =
   n_chains <- object@sim$chains
   n_y <- object@par_dims$covar_y[1]
 
-  pars <- extract_posterior_predictive_pars(object, new_data)
+  pars <- extract_posterior_predictive_pars_bmnrfit(object, new_data)
 
   out <- array(NA, dim = c(n_iters, n_chains, nrow(new_data), n_y))
 
+  message("Drawing MCMC samples from posterior predictive distribution")
+  .pb <- knitrProgressBar::progress_estimated(n_iters * n_chains)
+
   for (ii in seq_len(n_iters)) {
     for (ic in seq_len(n_chains)) {
+      knitrProgressBar::update_progress(.pb)
+
       out[ii, ic, , ] <-
         mvtnorm::rmvnorm(
           n = 1,
           mean = pars$flattened_mean[ii, ic, ],
           sigma = pars$covar[ii, ic, , ],
-          checkSymmetry = checkSymmetry
+          ...
         )
     }
   }
 
-  if (type == "raw") return(out)
-
-  out_draws_list <-
-    asplit(out, 4) |>
-    rlang::set_names(get_names_from_bmnrfit(object)$y) |>
-    purrr::imap(function(.y, .nm) {
-      tibble::as_tibble(expand.grid(
-        .iter = seq_len(dim(.y)[1]),
-        .chain = seq_len(dim(.y)[2]),
-        .index = seq_len(dim(.y)[3])
-      )) |>
-        dplyr::mutate(.value = c(.y)) |>
-        tidyr::nest(".pred_{.nm}" := -".index")
-    })
-
-  out_draws <-
-    out_draws_list |>
-    purrr::reduce(function(.x, .y) dplyr::left_join(.x, .y, by = ".index"))
-
-  if (type == "numeric") return(out_draws)
-
-  # type == "summary"
-  return(
-    out_draws |>
-      dplyr::mutate(
-        dplyr::across(
-          .cols = dplyr::starts_with(".pred"),
-          .fns = list(
-            mean = function(.draws_list) {
-              purrr::map_dbl(
-                .draws_list, \(.x) mean(.x$.value)
-              )
-            },
-            lower = function(.draws_list) {
-              purrr::map_dbl(
-                .draws_list, \(.x) stats::quantile(.x$.value, probs = 0.025)
-              )
-            },
-            upper = function(.draws_list) {
-              purrr::map_dbl(
-                .draws_list, \(.x) stats::quantile(.x$.value, probs = 0.975)
-              )
-            }
-          )
-        ),
-        .keep = "unused"
-      ) |>
-      dplyr::rename_with(function(.nm) gsub("_mean$", "", .nm))
-  )
-}
-
-
-#' @rdname bmnr-predict
-#' @export
-extract_posterior_predictive_pars <- function(object, new_data) {
-  UseMethod("extract_posterior_predictive_pars")
-}
-
-#' @rdname bmnr-predict
-#' @export
-extract_posterior_predictive_pars.bmnrfit_mvrnorm <- function(object, new_data) {
-  if (is.null(new_data)) new_data <- object@data
-  obs_data <- object@data
-
-  n_iters <- object@sim$iter - object@sim$warmup
-  n_chains <- object@sim$chains
-
-  n_y <- object@par_dims$covar_y[1]
-  n_new <- n_y * nrow(new_data)
-
-  out <-
-    list(
-      flattened_mean = array(NA, dim = c(n_iters, n_chains, n_new)),
-      covar = array(NA, dim = c(n_iters, n_chains, n_new, n_new))
-    )
-
-  lp_obs <- extract_linpred(object, new_data)
-  covar_y <- extract_covar_y(object)
-
-  for (ii in seq_len(n_iters)) {
-    for (ic in seq_len(n_chains)) {
-      out$flattened_mean[ii, ic, ] <- c(lp_obs[ii, ic, , ])
-
-      out$covar[ii, ic, , ] <-
-        diag(nrow = nrow(new_data)) %x% covar_y[ii, ic, , ]
-    }
-  }
+  y_nms <- get_names_from_bmnrfit(object)$y
+  out <- convert_raw_predictions_to_output(out, type, .names = y_nms)
 
   return(out)
 }
@@ -151,7 +70,48 @@ extract_posterior_predictive_pars.bmnrfit_mvrnorm <- function(object, new_data) 
 
 #' @rdname bmnr-predict
 #' @export
-extract_posterior_predictive_pars.bmnrfit <- function(object, new_data) {
+predict.bmnrfit_mvrnorm <- function(object, new_data, ..., type = NULL) {
+  type <- match.arg(type, choices = c("summary", "numeric", "raw"))
+  if (is.null(new_data)) new_data <- object@data
+
+  n_iters <- object@sim$iter - object@sim$warmup
+  n_chains <- object@sim$chains
+  n_y <- object@par_dims$covar_y[1]
+
+  lp_obs <- extract_linpred(object, new_data)
+  covar_y <- extract_covar_y(object)
+
+  out <- array(NA, dim = c(n_iters, n_chains, nrow(new_data), n_y))
+
+  message("Drawing MCMC samples from posterior predictive distribution")
+  .pb <- knitrProgressBar::progress_estimated(n_iters * n_chains)
+
+  for (ii in seq_len(n_iters)) {
+    for (ic in seq_len(n_chains)) {
+      knitrProgressBar::update_progress(.pb)
+
+      for (i in seq_len(nrow(new_data))) {
+        out[ii, ic, i, ] <-
+          mvtnorm::rmvnorm(
+            n = 1,
+            mean = lp_obs[ii, ic, i, ],
+            sigma = covar_y[ii, ic, , ],
+            ...
+          )
+      }
+    }
+  }
+
+  y_nms <- get_names_from_bmnrfit(object)$y
+  out <- convert_raw_predictions_to_output(out, type, .names = y_nms)
+
+  return(out)
+}
+
+
+#' @rdname bmnr-predict
+#' @keywords internal
+extract_posterior_predictive_pars_bmnrfit <- function(object, new_data) {
   if (is.null(new_data)) new_data <- object@data
   obs_data <- object@data
 
@@ -167,8 +127,14 @@ extract_posterior_predictive_pars.bmnrfit <- function(object, new_data) {
 
   joint_coords <-
     rbind(
-      stats::model.matrix(object@formula$coord, data = obs_data),
-      stats::model.matrix(object@formula$coord, data = new_data)
+      stats::model.matrix(
+        stats::delete.response(stats::terms(object@formula$coord)),
+        data = obs_data
+      ),
+      stats::model.matrix(
+        stats::delete.response(stats::terms(object@formula$coord)),
+        data = new_data
+      )
     )
 
   # Used to select correct partitions of `joint_covar_s`
@@ -225,3 +191,65 @@ extract_posterior_predictive_pars.bmnrfit <- function(object, new_data) {
   return(out)
 }
 
+
+#' @rdname bmnr-predict
+#'
+#' @param x array. Raw MCMC output as described in **Value** section.
+#' @param .names character. Names each dependent variable to be predicted.
+#'
+#' @keywords internal
+convert_raw_predictions_to_output <- function(x, type, .names = NULL) {
+  type <- match.arg(type, choices = c("summary", "numeric", "raw"))
+
+  if (type == "raw") return(x)
+
+  if (is.null(.names)) .names <- sprintf("y_pred%02i", seq_len(dim(x)[4]))
+
+  draws_list <-
+    asplit(x, 4) |>
+    rlang::set_names(nm = .names) |>
+    purrr::imap(function(.y, .nm) {
+      tibble::as_tibble(expand.grid(
+        .iter = seq_len(dim(.y)[1]),
+        .chain = seq_len(dim(.y)[2]),
+        .index = seq_len(dim(.y)[3])
+      )) |>
+        dplyr::mutate(.value = c(.y)) |>
+        tidyr::nest(".pred_{.nm}" := -".index")
+    })
+
+  draws <-
+    draws_list |>
+    purrr::reduce(function(.x, .y) dplyr::left_join(.x, .y, by = ".index"))
+
+  if (type == "numeric") return(draws)
+
+  # type == "summary"
+  return(
+    draws |>
+      dplyr::mutate(
+        dplyr::across(
+          .cols = dplyr::starts_with(".pred"),
+          .fns = list(
+            mean = function(.draws_list) {
+              purrr::map_dbl(
+                .draws_list, \(.x) mean(.x$.value)
+              )
+            },
+            lower = function(.draws_list) {
+              purrr::map_dbl(
+                .draws_list, \(.x) stats::quantile(.x$.value, probs = 0.025)
+              )
+            },
+            upper = function(.draws_list) {
+              purrr::map_dbl(
+                .draws_list, \(.x) stats::quantile(.x$.value, probs = 0.975)
+              )
+            }
+          )
+        ),
+        .keep = "unused"
+      ) |>
+      dplyr::rename_with(function(.nm) gsub("_mean$", "", .nm))
+  )
+}
